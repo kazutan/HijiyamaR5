@@ -6,11 +6,19 @@ Hijiyama.R \#5 発表資料
 Rの導入とデータ操作
 -------------------
 
+- スライド1　https://kazutan.github.io/HijiyamaR5/r-intro.html
+- スライド2　https://kazutan.github.io/HijiyamaR5/data_handling.html
+
+
 R Markdown入門
 --------------
 
+- スライド　https://kazutan.github.io/HijiyamaR5/rmd_intro.html
+
 最近のR Markdown関連のお話
 --------------------------
+
+- スライド　https://kazutan.github.io/HijiyamaR5/rmd_trend.html
 
 License
 -------
