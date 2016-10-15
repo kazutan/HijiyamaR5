@@ -1,0 +1,405 @@
+---
+title: "R Markdown入門"
+subtitle: "Hijiyama.R #5"
+author: ""
+date: "`r format(Sys.time(),'%Y/%m/%d')`"
+output:
+  revealjs::revealjs_presentation:
+    pandoc_args: [
+      '--from', 'markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures'
+    ]
+    center: true
+    self_contained: false
+css: "for-revealjs.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = FALSE)
+library(DiagrammeR)
+```
+
+# 自己紹介
+
+## 基本データ
+
+<div class="column1">
+- 比治山大学短期大学部
+- @kazutan  
+(Twitter, GitHub, Qiita)
+- http://kz-md.net/
+- http://blog.kz-md.net/
+</div>
+<div class="column2">
+![icon](pics/user.png)
+</div>
+
+# 今日のお話
+
+## Rでドキュメント生成
+
+- Rはデータ解析
+- 実はRでドキュメントを生成することが可能
+    - R Markdownを利用
+    - その便利さ、その将来性に注目が
+- 今日はR Markdownによるドキュメント生成をご紹介
+
+## Rでやるメリット
+
+- 分析からレポート生成までが完結
+    - WordもExcelも(そしてぱわぽも)いらない
+    - コピペ汚染からの開放
+- 再現性の確保
+    - 同一の内容をそのまま再現できる
+- 再利用、配布が簡単
+    - コードを簡単に再利用可能
+    - テキストデータなので運用が簡単
+- 作るのが簡単
+    - ドキュメント部分は基本Markdown
+- and more!!
+
+## デモ
+使えるようになるとこんなことができるようになります:
+
+- [RPubs - 台風22号と23号](https://rpubs.com/kazutan/typhoon5)
+- [データハンドリング](http://kazutan.github.io/HijiyamaR4/data_handling_d.html)
+- [RPubs - Plotlyサンプル集](https://rpubs.com/kazutan/plotly_flexdashboard)
+- [R Markdownのparams機能を利用してflexdashboard作成](https://kazutan.github.io/param_dashboard/)
+- このスライドも!
+
+## 基本的な考え方
+
+1. R Markdownファイルを準備
+2. 中身を記述
+3. レンダリングして出力を確認
+4. 2と3を繰り返す
+5. 完成
+
+# まずはMarkdown記法
+
+## 注意事項
+
+- Markdownとは何かについては省略
+- mdには色々な"方言"が
+    - RmdはPandoc Markdownです
+- RStudioにはクイックリファレンスが
+    - [Help] - [Markdown Quick Reference]
+    - これみとけばOK
+- サンプルは[こちら](http://kazutan.github.io/KandaiR1/md_sample.md)(文字化けしたら、ブラウザの文字コードを変更してください)
+    - htmlへレンダリングした結果は[こちら](http://kazutan.github.io/KandaiR1/md_sample.html)
+
+## 見出し(h1-h4)
+
+```
+# レベル1(h1)
+## レベル2(h2)
+### レベル3(h3)
+#### レベル4(h4)
+```
+
+- 文書構造を明確にするためにも、きっちり割り振る
+    - レベル1は通常文書タイトル(章クラス)
+    - レベル2は通常節クラス
+    - 以下準じて下がっていく
+- 極力見出しの前後は空行をいれとくといいです
+
+## 段落(p)と強制改行(br)
+
+```
+「もうすこしだ！　この山を越えると、梅の林がある。――疾く参って梅林の木陰に憩い、思うさま梅の実みをとれ。――梅の実をたたき落して喰え」
+
+　聞くと、奄々と渇にくるしんでいた兵も、  
+「梅でもいい！」  
+「梅ばやしまで頑張れ」と、にわかに勇気づいた。
+
+　そして無意識のうちに、梅の酸っぱい味を想像し、口中に唾をわかせて、渇を忘れてしまっていた。
+
+　――梅酸渇を医す。
+```
+
+- 上下に空行を挟むと、そこを段落ブロック(p)として認識
+- 行末に半角スペース2つ以上いれると強制改行(br)
+
+## 番号なし箇条書き(ul>li)
+
+```
+- 箇条書き1
+    - 箇条書き1-1
+- 箇条書き2
+    * 箇条書き2-1
+    * 箇条書き2-2
+```
+
+- 記号とスペースの後に内容を記述
+    - どちらでもOK
+    - 行頭の空白4つで1レベル下がる
+
+## 番号あり箇条書き(ol>li)
+
+```
+1. 番号1
+    1. 番号1-1
+2. 番号2
+    1. 番号2-1
+    2. 番号2-2
+```
+
+- 番号とピリオドとスペースの後に内容を記述
+    - 行頭の空白4つで1レベル下がる
+
+## コードブロック(pre>code)
+
+````
+```
+(ここにコード記述)
+```
+````
+
+- 入力した内容がそのまま表示されます
+    - Rのコードは評価されません
+
+## 強調表示
+
+```
+*斜体*、もひとつ_斜体_
+**太字**、もひとつ__太字__
+```
+
+- 上記のとおりです
+- 強調具合などはCSSなどに依存します
+
+## リンク、画像
+
+```
+- http://blog.kz-md.net/
+- [リンク文字](http://blog.kz-me.net/)
+
+![R looo](https://www.r-project.org/Rlogo.png)
+![zou-san](pics/user.png)
+```
+
+- 基本、相対パスや絶対パスの両方OK
+- URLでもOK
+
+## その他
+
+- 以下の内容もいけます
+    - 脚注
+    - Latex数式
+    - 表
+    - 水平線
+- Pandoc Markdownなら大抵OKです
+
+# R Markdownの書き方
+
+## Markdownとの違い
+
+- Markdownに**Rのコードを評価するブロック(Rチャンク)を組み込めるようにした**ようなもの
+    - 拡張子は**.Rmd**
+    - Markdownの基礎があれば、Rチャンクを少し勉強すれば利用可能
+    - RStudioを使うと抜群に楽になる
+    - ただし文字コードの闇は深い
+
+## R Markdownの仕組み
+
+- R Markdownは以下の流れでドキュメントを生成します
+    - まずはknitrパッケージでRチャンク部分などを処理
+    - 生成されたmdファイルをpandocというドキュメント変換アプリで変換
+
+```{r workflow-render, eval=TRUE, echo=FALSE}
+ndf <- create_nodes(node=letters[1:3], label=c(".Rmd", ".md", "ドキュメント"))
+edf <- create_edges(from=c("a", "b"), to=c("b", "c"), label=c("knitr", "pandoc"))
+graph <- create_graph(
+  nodes_df = ndf,
+  edges_df = edf,
+  graph_attrs = "rankdir = LR"
+)
+render_graph(graph)
+
+```
+
+
+## 対応する出力形式
+
+- いろんなものに対応しています(一部抜粋)
+    - htmlファイル
+        - 基本かつ**最強**。最もRmdを活かせるタイプ。
+    - pdfファイル
+        - tex環境が必要。いくつか地雷があるけど整えれば楽しい。
+    - docxファイル
+        - Officeをインストールしてなくても生成可能。
+    - odtファイル
+        - LibreOfficeなどで利用可能。
+    - mdファイル
+        - Githubやブログ記事向け。
+    - rtfファイル
+        - リッチテキスト形式。
+
+
+# Rチャンク
+
+## Rチャンクとは
+
+- Rのコードを記述したブロック
+    - 基本的な書き方は以下の通り
+````
+`r ''````{r}
+head(iris)
+`r ''````
+````
+    - ちなみに実行結果は以下の通り:
+
+```{r r-chank-sample, eval=TRUE, echo=FALSE}
+head(iris)
+```
+
+## Rチャンクの基本
+
+- 冒頭にYAMLヘッダ
+    - ドキュメント設定などはここに記載
+- Rチャンクはいくつでも設置可
+    - チャンクに名前をつけることも可能
+    - 結構詳細にオプションを設定可能
+    - Rオブジェクトを引き継ぐことも可能
+- 通常と(ほぼ)同じようにRが使える
+    - パッケージ読み込み
+    - データファイルへのアクセス
+    - ただしパスについてはちょっと気をつける点も
+- 文字コード…
+    - **Why are you using SJIS?**問題
+
+## Rチャンク オプション
+
+- そのRチャンクでの設定を記述
+    - 設定項目はたくさんある
+    - そのあたりはリファレンスを参照
+    - 以下、絶対覚えるべきものだけ紹介
+
+````
+`r ''````{r chank-name, eval=TRUE}
+head(iris)
+`r ''````
+````
+
+## echo(コード部の表示・非表示)
+
+- Rのチャンクコードを表示させるかどうか
+    - `echo=FALSE`で非表示
+    - あくまで表示に関することだけ
+    - コード評価をするかどうかは影響しない
+
+````
+`r ''````{r, echo=FALSE}
+head(iris)
+`r ''````
+````
+
+## eval(コード部の評価・非評価)
+
+- Rチャンクのコードを評価するかしないか
+    - `eval=FALSE`で非評価
+
+````
+`r ''````{r, eval=FALSE}
+head(iris)
+`r ''````
+````
+
+## include(レポートに組み込むか否か)
+
+- Rチャンクをレポートに組み込むかどうか
+    - `include=FALSE`でレポートから除外
+    - でもコードは評価されます
+    - セットアップとか前処理とかパッケージ読み込みとかで重宝
+
+````
+`r ''````{r, include=FALSE}
+library(zousan)
+`r ''````
+````
+
+# yamlヘッダ
+
+## yamlヘッダの基本
+
+- ドキュメントの全体的な設定など記述
+- yaml記法で記述
+    - 左のスペース、重要
+    - 多分感覚をつかむまでは、見様見真似でやっていったほうがいいです
+
+## 主な項目
+
+- `Title: `はドキュメントのタイトル
+- `author: `は名前
+- `date: `は日にち
+- `output: `は出力形式に関して
+    - ここで出力を指定・設定
+    - まずはここでいろいろ試しましょう
+
+# レンダリング
+
+## Knitボタン
+
+- RStudioのKnitボタンでおk
+    - うまくいったらViewerに表示
+    - あるいは別ウィンドウにて表示
+
+# 論文をR Markdownで書きたい
+
+## 論文をRmdで書くなら…?
+
+- 図表を論文向けの書式に
+    - Rコードの出力でがんばろう
+    - 図ならggplot2でテーマがあります
+    - 表も準拠したものがあります
+- 文献リストを自動化して
+    - Citation機能を利用しましょう
+- 某フォーマットを自動であててくれ
+    - テンプレートを活用しましょう
+
+## citationの使い方
+
+- 詳しくは[本家のドキュメント](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)を参照してください
+    - Pandocのcitation機能を利用しています
+    - なので**かなり簡単に**もってこれます
+    - (デモで説明)
+
+## テンプレートの活用
+
+- R Markdownはほぼすべての出力でテンプレートを活用できます
+    - なので、**docxでもいけます**
+    - これもPandocの機能を利用しています
+    - (デモで説明)
+
+# 参考資料
+
+## R Markdownのドキュメント
+
+- [ドキュメント・プレゼンテーション生成](http://www.kyoritsu-pub.co.jp/bookdetail/9784320123724)
+    - 名著です。ぜひ買いましょう。
+- [R Markdownで楽々レポートづくり：連載｜gihyo.jp … 技術評論社](http://gihyo.jp/admin/serial/01/r-markdown)
+    - 上記書籍の著者による連載です。
+    - 非常にわかりやすくR Markdownの入門に最適!
+- http://rmarkdown.rstudio.com/index.html
+    - 本家のドキュメント(英語)です。
+    - 入門や基礎、そして応用や開発までたっぷり詰まってますう
+- **[R Markdown Get Started](http://rmarkdown.rstudio.com/lesson-1.html)**
+    - 本家によるチュートリアルレッスンです。
+    - おそらく**現時点でこれが最強です**
+    - 英語に抵抗がなければ，即ここへ
+
+## こちらもおすすめ
+
+- [R Markdown CheatSheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+    - RStudio謹製のチートシート。
+- [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+    - チャンクオプションやyaml設定などのリファレンス。
+- r-wakalang
+    - rのチャットルーム。詳しくは[こちら](http://qiita.com/uri/items/5583e91bb5301ed5a4ba)
+    - 国内最強のメンバーが超優しく、そして即対応してくれます
+
+## さいごに
+
+### Enjoy!
+
+![](pics/icon_tw3.png)

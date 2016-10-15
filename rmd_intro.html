@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>R Markdown入門</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="rmd_intro_files/reveal.js-3.3.0/css/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="rmd_intro_files/reveal.js-3.3.0/css/theme/simple.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="for-revealjs.css"/>
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'rmd_intro_files/reveal.js-3.3.0/css/print/pdf.css' : 'rmd_intro_files/reveal.js-3.3.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+    <script src="rmd_intro_files/reveal.js-3.3.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="rmd_intro_files/htmlwidgets-0.7/htmlwidgets.js"></script>
+    <script src="rmd_intro_files/viz-0.3/viz.js"></script>
+    <link href="rmd_intro_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="rmd_intro_files/grViz-binding-0.8.5/grViz.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">R Markdown入門</h1>
+  <h1 class="subtitle">Hijiyama.R #5</h1>
+    <h3 class="date">2016/10/15</h3>
+</section>
+
+<section><section id="自己紹介" class="titleslide slide level1"><h1>自己紹介</h1></section><section id="基本データ" class="slide level2">
+<h1>基本データ</h1>
+<div class="column1">
+<ul>
+<li>比治山大学短期大学部</li>
+<li><span class="citation" data-cites="kazutan">@kazutan</span><br />
+(Twitter, GitHub, Qiita)</li>
+<li><a href="http://kz-md.net/" class="uri">http://kz-md.net/</a></li>
+<li><a href="http://blog.kz-md.net/" class="uri">http://blog.kz-md.net/</a></li>
+</ul>
+</div>
+<div class="column2">
+<p><img src="pics/user.png" alt="icon" /></p>
+</div>
+</section></section>
+<section><section id="今日のお話" class="titleslide slide level1"><h1>今日のお話</h1></section><section id="rでドキュメント生成" class="slide level2">
+<h1>Rでドキュメント生成</h1>
+<ul>
+<li>Rはデータ解析</li>
+<li>実はRでドキュメントを生成することが可能
+<ul>
+<li>R Markdownを利用</li>
+<li>その便利さ、その将来性に注目が</li>
+</ul></li>
+<li>今日はR Markdownによるドキュメント生成をご紹介</li>
+</ul>
+</section><section id="rでやるメリット" class="slide level2">
+<h1>Rでやるメリット</h1>
+<ul>
+<li>分析からレポート生成までが完結
+<ul>
+<li>WordもExcelも(そしてぱわぽも)いらない</li>
+<li>コピペ汚染からの開放</li>
+</ul></li>
+<li>再現性の確保
+<ul>
+<li>同一の内容をそのまま再現できる</li>
+</ul></li>
+<li>再利用、配布が簡単
+<ul>
+<li>コードを簡単に再利用可能</li>
+<li>テキストデータなので運用が簡単</li>
+</ul></li>
+<li>作るのが簡単
+<ul>
+<li>ドキュメント部分は基本Markdown</li>
+</ul></li>
+<li>and more!!</li>
+</ul>
+</section><section id="デモ" class="slide level2">
+<h1>デモ</h1>
+<p>使えるようになるとこんなことができるようになります:</p>
+<ul>
+<li><a href="https://rpubs.com/kazutan/typhoon5">RPubs - 台風22号と23号</a></li>
+<li><a href="http://kazutan.github.io/HijiyamaR4/data_handling_d.html">データハンドリング</a></li>
+<li><a href="https://rpubs.com/kazutan/plotly_flexdashboard">RPubs - Plotlyサンプル集</a></li>
+<li><a href="https://kazutan.github.io/param_dashboard/">R Markdownのparams機能を利用してflexdashboard作成</a></li>
+<li>このスライドも!</li>
+</ul>
+</section><section id="基本的な考え方" class="slide level2">
+<h1>基本的な考え方</h1>
+<ol type="1">
+<li>R Markdownファイルを準備</li>
+<li>中身を記述</li>
+<li>レンダリングして出力を確認</li>
+<li>2と3を繰り返す</li>
+<li>完成</li>
+</ol>
+</section></section>
+<section><section id="まずはmarkdown記法" class="titleslide slide level1"><h1>まずはMarkdown記法</h1></section><section id="注意事項" class="slide level2">
+<h1>注意事項</h1>
+<ul>
+<li>Markdownとは何かについては省略</li>
+<li>mdには色々な“方言”が
+<ul>
+<li>RmdはPandoc Markdownです</li>
+</ul></li>
+<li>RStudioにはクイックリファレンスが
+<ul>
+<li>[Help] - [Markdown Quick Reference]</li>
+<li>これみとけばOK</li>
+</ul></li>
+<li>サンプルは<a href="http://kazutan.github.io/KandaiR1/md_sample.md">こちら</a>(文字化けしたら、ブラウザの文字コードを変更してください)
+<ul>
+<li>htmlへレンダリングした結果は<a href="http://kazutan.github.io/KandaiR1/md_sample.html">こちら</a></li>
+</ul></li>
+</ul>
+</section><section id="見出しh1-h4" class="slide level2">
+<h1>見出し(h1-h4)</h1>
+<pre><code># レベル1(h1)
+## レベル2(h2)
+### レベル3(h3)
+#### レベル4(h4)</code></pre>
+<ul>
+<li>文書構造を明確にするためにも、きっちり割り振る
+<ul>
+<li>レベル1は通常文書タイトル(章クラス)</li>
+<li>レベル2は通常節クラス</li>
+<li>以下準じて下がっていく</li>
+</ul></li>
+<li>極力見出しの前後は空行をいれとくといいです</li>
+</ul>
+</section><section id="段落pと強制改行br" class="slide level2">
+<h1>段落(p)と強制改行(br)</h1>
+<pre><code>「もうすこしだ！　この山を越えると、梅の林がある。――疾く参って梅林の木陰に憩い、思うさま梅の実みをとれ。――梅の実をたたき落して喰え」
+
+　聞くと、奄々と渇にくるしんでいた兵も、  
+「梅でもいい！」  
+「梅ばやしまで頑張れ」と、にわかに勇気づいた。
+
+　そして無意識のうちに、梅の酸っぱい味を想像し、口中に唾をわかせて、渇を忘れてしまっていた。
+
+　――梅酸渇を医す。</code></pre>
+<ul>
+<li>上下に空行を挟むと、そこを段落ブロック(p)として認識</li>
+<li>行末に半角スペース2つ以上いれると強制改行(br)</li>
+</ul>
+</section><section id="番号なし箇条書きulli" class="slide level2">
+<h1>番号なし箇条書き(ul&gt;li)</h1>
+<pre><code>- 箇条書き1
+    - 箇条書き1-1
+- 箇条書き2
+    * 箇条書き2-1
+    * 箇条書き2-2</code></pre>
+<ul>
+<li>記号とスペースの後に内容を記述
+<ul>
+<li>どちらでもOK</li>
+<li>行頭の空白4つで1レベル下がる</li>
+</ul></li>
+</ul>
+</section><section id="番号あり箇条書きolli" class="slide level2">
+<h1>番号あり箇条書き(ol&gt;li)</h1>
+<pre><code>1. 番号1
+    1. 番号1-1
+2. 番号2
+    1. 番号2-1
+    2. 番号2-2</code></pre>
+<ul>
+<li>番号とピリオドとスペースの後に内容を記述
+<ul>
+<li>行頭の空白4つで1レベル下がる</li>
+</ul></li>
+</ul>
+</section><section id="コードブロックprecode" class="slide level2">
+<h1>コードブロック(pre&gt;code)</h1>
+<pre><code>```
+(ここにコード記述)
+```</code></pre>
+<ul>
+<li>入力した内容がそのまま表示されます
+<ul>
+<li>Rのコードは評価されません</li>
+</ul></li>
+</ul>
+</section><section id="強調表示" class="slide level2">
+<h1>強調表示</h1>
+<pre><code>*斜体*、もひとつ_斜体_
+**太字**、もひとつ__太字__</code></pre>
+<ul>
+<li>上記のとおりです</li>
+<li>強調具合などはCSSなどに依存します</li>
+</ul>
+</section><section id="リンク画像" class="slide level2">
+<h1>リンク、画像</h1>
+<pre><code>- http://blog.kz-md.net/
+- [リンク文字](http://blog.kz-me.net/)
+
+![R looo](https://www.r-project.org/Rlogo.png)
+![zou-san](pics/user.png)</code></pre>
+<ul>
+<li>基本、相対パスや絶対パスの両方OK</li>
+<li>URLでもOK</li>
+</ul>
+</section><section id="その他" class="slide level2">
+<h1>その他</h1>
+<ul>
+<li>以下の内容もいけます
+<ul>
+<li>脚注</li>
+<li>Latex数式</li>
+<li>表</li>
+<li>水平線</li>
+</ul></li>
+<li>Pandoc Markdownなら大抵OKです</li>
+</ul>
+</section></section>
+<section><section id="r-markdownの書き方" class="titleslide slide level1"><h1>R Markdownの書き方</h1></section><section id="markdownとの違い" class="slide level2">
+<h1>Markdownとの違い</h1>
+<ul>
+<li>Markdownに<strong>Rのコードを評価するブロック(Rチャンク)を組み込めるようにした</strong>ようなもの
+<ul>
+<li>拡張子は<strong>.Rmd</strong></li>
+<li>Markdownの基礎があれば、Rチャンクを少し勉強すれば利用可能</li>
+<li>RStudioを使うと抜群に楽になる</li>
+<li>ただし文字コードの闇は深い</li>
+</ul></li>
+</ul>
+</section><section id="r-markdownの仕組み" class="slide level2">
+<h1>R Markdownの仕組み</h1>
+<ul>
+<li>R Markdownは以下の流れでドキュメントを生成します
+<ul>
+<li>まずはknitrパッケージでRチャンク部分などを処理</li>
+<li>生成されたmdファイルをpandocというドキュメント変換アプリで変換</li>
+</ul></li>
+</ul>
+<div id="htmlwidget-c4ef1f8e030ec1b38165" style="width:768px;height:576px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c4ef1f8e030ec1b38165">{"x":{"diagram":"digraph {\n\ngraph [rankdir = LR]\n\nnode [fontname = Helvetica,\n     fontsize = 10,\n     shape = circle,\n     fixedsize = true,\n     width = 0.5,\n     style = filled,\n     fillcolor = aliceblue,\n     color = gray70,\n     fontcolor = gray50]\n\nedge [len = 1.5,\n     color = gray40,\n     arrowsize = 0.5]\n\n  \"a\" [label = \".Rmd\"] \n  \"b\" [label = \".md\"] \n  \"c\" [label = \"ドキュメント\"] \n\"a\"->\"b\" [label = \"knitr\"] \n\"b\"->\"c\" [label = \"pandoc\"] \n}","config":{"engine":null,"options":null}},"evals":[],"jsHooks":[]}</script>
+</section><section id="対応する出力形式" class="slide level2">
+<h1>対応する出力形式</h1>
+<ul>
+<li>いろんなものに対応しています(一部抜粋)
+<ul>
+<li>htmlファイル
+<ul>
+<li>基本かつ<strong>最強</strong>。最もRmdを活かせるタイプ。</li>
+</ul></li>
+<li>pdfファイル
+<ul>
+<li>tex環境が必要。いくつか地雷があるけど整えれば楽しい。</li>
+</ul></li>
+<li>docxファイル
+<ul>
+<li>Officeをインストールしてなくても生成可能。</li>
+</ul></li>
+<li>odtファイル
+<ul>
+<li>LibreOfficeなどで利用可能。</li>
+</ul></li>
+<li>mdファイル
+<ul>
+<li>Githubやブログ記事向け。</li>
+</ul></li>
+<li>rtfファイル
+<ul>
+<li>リッチテキスト形式。</li>
+</ul></li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="rチャンク" class="titleslide slide level1"><h1>Rチャンク</h1></section><section id="rチャンクとは" class="slide level2">
+<h1>Rチャンクとは</h1>
+<ul>
+<li>Rのコードを記述したブロック
+<ul>
+<li><p>基本的な書き方は以下の通り</p>
+<pre><code>```{r}
+head(iris)
+```</code></pre></li>
+<li><p>ちなみに実行結果は以下の通り:</p></li>
+</ul></li>
+</ul>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</section><section id="rチャンクの基本" class="slide level2">
+<h1>Rチャンクの基本</h1>
+<ul>
+<li>冒頭にYAMLヘッダ
+<ul>
+<li>ドキュメント設定などはここに記載</li>
+</ul></li>
+<li>Rチャンクはいくつでも設置可
+<ul>
+<li>チャンクに名前をつけることも可能</li>
+<li>結構詳細にオプションを設定可能</li>
+<li>Rオブジェクトを引き継ぐことも可能</li>
+</ul></li>
+<li>通常と(ほぼ)同じようにRが使える
+<ul>
+<li>パッケージ読み込み</li>
+<li>データファイルへのアクセス</li>
+<li>ただしパスについてはちょっと気をつける点も</li>
+</ul></li>
+<li>文字コード…
+<ul>
+<li><strong>Why are you using SJIS?</strong>問題</li>
+</ul></li>
+</ul>
+</section><section id="rチャンク-オプション" class="slide level2">
+<h1>Rチャンク オプション</h1>
+<ul>
+<li>そのRチャンクでの設定を記述
+<ul>
+<li>設定項目はたくさんある</li>
+<li>そのあたりはリファレンスを参照</li>
+<li>以下、絶対覚えるべきものだけ紹介</li>
+</ul></li>
+</ul>
+<pre><code>```{r chank-name, eval=TRUE}
+head(iris)
+```</code></pre>
+</section><section id="echoコード部の表示非表示" class="slide level2">
+<h1>echo(コード部の表示・非表示)</h1>
+<ul>
+<li>Rのチャンクコードを表示させるかどうか
+<ul>
+<li><code>echo=FALSE</code>で非表示</li>
+<li>あくまで表示に関することだけ</li>
+<li>コード評価をするかどうかは影響しない</li>
+</ul></li>
+</ul>
+<pre><code>```{r, echo=FALSE}
+head(iris)
+```</code></pre>
+</section><section id="evalコード部の評価非評価" class="slide level2">
+<h1>eval(コード部の評価・非評価)</h1>
+<ul>
+<li>Rチャンクのコードを評価するかしないか
+<ul>
+<li><code>eval=FALSE</code>で非評価</li>
+</ul></li>
+</ul>
+<pre><code>```{r, eval=FALSE}
+head(iris)
+```</code></pre>
+</section><section id="includeレポートに組み込むか否か" class="slide level2">
+<h1>include(レポートに組み込むか否か)</h1>
+<ul>
+<li>Rチャンクをレポートに組み込むかどうか
+<ul>
+<li><code>include=FALSE</code>でレポートから除外</li>
+<li>でもコードは評価されます</li>
+<li>セットアップとか前処理とかパッケージ読み込みとかで重宝</li>
+</ul></li>
+</ul>
+<pre><code>```{r, include=FALSE}
+library(zousan)
+```</code></pre>
+</section></section>
+<section><section id="yamlヘッダ" class="titleslide slide level1"><h1>yamlヘッダ</h1></section><section id="yamlヘッダの基本" class="slide level2">
+<h1>yamlヘッダの基本</h1>
+<ul>
+<li>ドキュメントの全体的な設定など記述</li>
+<li>yaml記法で記述
+<ul>
+<li>左のスペース、重要</li>
+<li>多分感覚をつかむまでは、見様見真似でやっていったほうがいいです</li>
+</ul></li>
+</ul>
+</section><section id="主な項目" class="slide level2">
+<h1>主な項目</h1>
+<ul>
+<li><code>Title:</code>はドキュメントのタイトル</li>
+<li><code>author:</code>は名前</li>
+<li><code>date:</code>は日にち</li>
+<li><code>output:</code>は出力形式に関して
+<ul>
+<li>ここで出力を指定・設定</li>
+<li>まずはここでいろいろ試しましょう</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="レンダリング" class="titleslide slide level1"><h1>レンダリング</h1></section><section id="knitボタン" class="slide level2">
+<h1>Knitボタン</h1>
+<ul>
+<li>RStudioのKnitボタンでおk
+<ul>
+<li>うまくいったらViewerに表示</li>
+<li>あるいは別ウィンドウにて表示</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="論文をr-markdownで書きたい" class="titleslide slide level1"><h1>論文をR Markdownで書きたい</h1></section><section id="論文をrmdで書くなら" class="slide level2">
+<h1>論文をRmdで書くなら…?</h1>
+<ul>
+<li>図表を論文向けの書式に
+<ul>
+<li>Rコードの出力でがんばろう</li>
+<li>図ならggplot2でテーマがあります</li>
+<li>表も準拠したものがあります</li>
+</ul></li>
+<li>文献リストを自動化して
+<ul>
+<li>Citation機能を利用しましょう</li>
+</ul></li>
+<li>某フォーマットを自動であててくれ
+<ul>
+<li>テンプレートを活用しましょう</li>
+</ul></li>
+</ul>
+</section><section id="citationの使い方" class="slide level2">
+<h1>citationの使い方</h1>
+<ul>
+<li>詳しくは<a href="http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html">本家のドキュメント</a>を参照してください
+<ul>
+<li>Pandocのcitation機能を利用しています</li>
+<li>なので<strong>かなり簡単に</strong>もってこれます</li>
+<li>(デモで説明)</li>
+</ul></li>
+</ul>
+</section><section id="テンプレートの活用" class="slide level2">
+<h1>テンプレートの活用</h1>
+<ul>
+<li>R Markdownはほぼすべての出力でテンプレートを活用できます
+<ul>
+<li>なので、<strong>docxでもいけます</strong></li>
+<li>これもPandocの機能を利用しています</li>
+<li>(デモで説明)</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="参考資料" class="titleslide slide level1"><h1>参考資料</h1></section><section id="r-markdownのドキュメント" class="slide level2">
+<h1>R Markdownのドキュメント</h1>
+<ul>
+<li><a href="http://www.kyoritsu-pub.co.jp/bookdetail/9784320123724">ドキュメント・プレゼンテーション生成</a>
+<ul>
+<li>名著です。ぜひ買いましょう。</li>
+</ul></li>
+<li><a href="http://gihyo.jp/admin/serial/01/r-markdown">R Markdownで楽々レポートづくり：連載｜gihyo.jp … 技術評論社</a>
+<ul>
+<li>上記書籍の著者による連載です。</li>
+<li>非常にわかりやすくR Markdownの入門に最適!</li>
+</ul></li>
+<li><a href="http://rmarkdown.rstudio.com/index.html" class="uri">http://rmarkdown.rstudio.com/index.html</a>
+<ul>
+<li>本家のドキュメント(英語)です。</li>
+<li>入門や基礎、そして応用や開発までたっぷり詰まってますう</li>
+</ul></li>
+<li><strong><a href="http://rmarkdown.rstudio.com/lesson-1.html">R Markdown Get Started</a></strong>
+<ul>
+<li>本家によるチュートリアルレッスンです。</li>
+<li>おそらく<strong>現時点でこれが最強です</strong></li>
+<li>英語に抵抗がなければ，即ここへ</li>
+</ul></li>
+</ul>
+</section><section id="こちらもおすすめ" class="slide level2">
+<h1>こちらもおすすめ</h1>
+<ul>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf">R Markdown CheatSheet</a>
+<ul>
+<li>RStudio謹製のチートシート。</li>
+</ul></li>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">R Markdown Reference Guide</a>
+<ul>
+<li>チャンクオプションやyaml設定などのリファレンス。</li>
+</ul></li>
+<li>r-wakalang
+<ul>
+<li>rのチャットルーム。詳しくは<a href="http://qiita.com/uri/items/5583e91bb5301ed5a4ba">こちら</a></li>
+<li>国内最強のメンバーが超優しく、そして即対応してくれます</li>
+</ul></li>
+</ul>
+</section><section id="さいごに" class="slide level2">
+<h1>さいごに</h1>
+<h3 id="enjoy">Enjoy!</h3>
+<p><img src="pics/icon_tw3.png" /></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="rmd_intro_files/reveal.js-3.3.0/lib/js/head.min.js"></script>
+  <script src="rmd_intro_files/reveal.js-3.3.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: true,
+        // Transition style
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

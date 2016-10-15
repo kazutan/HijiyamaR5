@@ -1,0 +1,16 @@
+---
+title: "bib_test"
+output: html_document
+bibliography: cit.bibtex
+csl: apa.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## テスト
+
+この [@zousan] はどうなんでしょうね。
+
+## 引用文献

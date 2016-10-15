@@ -1,0 +1,395 @@
+---
+title: "Rの導入"
+subtitle: "Hijiyama.R #5"
+author: "kazutan"
+output: 
+  revealjs::revealjs_presentation:
+    theme: "sky"
+    center: true
+    toc: true
+    pandoc_args: [
+      "--number-section",
+      "--from", "markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures"
+    ]
+css: "for-revealjs.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
+library(knitr)
+```
+
+# 自己紹介
+
+## 基本データ
+
+<div class="column1">
+- 比治山大学短期大学部
+- @kazutan (Twitter, GitHub, Qiita)
+- http://kz-md.net/
+- http://blog.kz-md.net/
+</div>
+<div class="column2">
+![icon](pics/user.png)
+</div>
+
+# Rってなに?
+
+## 統計解析を主とした環境
+- オープンソース
+    - コードが公開されています
+- クロスプラットフォーム
+    - Windows, Mac, LinuxでもOK
+- (基本的に)CUI
+    - **むしろ喜べ、コードを叩ける幸せを**
+- 非常に活発!!
+    - 書籍やWebなど情報たくさん!
+    - 全国各地で勉強会が開催!
+
+## Rのいいところ
+- 基本無料
+    - 無課金(?)でもいけるけど、学習コストなどは(場合によっては)他より発生するかも
+- 実装がはやい
+    - 世界中のいろんな人が開発してるので、大抵の分析は誰かが実装してる
+- 自分で実装できる
+    - やりたい分析がみつからない→「なら自分で作ればいい」
+- 大抵のことはRで完結
+    - 本当にいろんなことができます
+
+## Rでできるいろんなこと
+- Office suite系も
+    - ドキュメント作成、集計表、グラフ、プレゼンスライドもOK
+- 普通は専用ソフトが必要なことも
+    - テキストマイニング、シミュレーション、Webスクレイピング、地図統計もOK
+- 疲れた時の気分転換も
+    - ライフゲーム、数独、マインスイーパも…
+
+## Rのちょっと残念なところ
+- 速くは、ない
+    - 処理にもよるけど最速ではない
+- 英語が中心
+    - 特にヘルプは全て英語
+- 文字コード関連
+    - よく地雷が埋まってる
+
+# Rのインストール
+
+## Rのインストール
+<div class="column1">
+1. 「r」で検索
+2. 左のCRANをクリック
+3. 近いところ、もしくは0-Cloudをクリック
+4. 「Download R for 」で自分のOSを選択
+5. 以降それに順してインストール
+</div>
+<div class="column2">
+![R-Project](pics/r-project.png)
+</div>
+
+## Windowsへの導入
+- **base**をダウンロードしてインストール
+    - 日本語で可能です
+    - よっぽどな理由がない限り32bit版は不要です
+- **Rtools**もダウンロードしてインストール
+    - 今後のことを考えて、入れておくことをおすすめします
+
+## MacOSへの導入
+- Mavericks(10.9)以降
+    - **R-3.3.1.pkg**をダウンロードしてインストール
+- Snow Leopard(10.6)- Mountain Lion(10.8)
+    - **R-3.2.1-snowleopard.pkg**をダウンロードしてインストール
+- Homebrewを使用する場合
+    - ググってください
+
+## Linuxへの導入
+省略します。
+
+# RStudioのすすめ
+
+## Rの統合開発環境
+
+- いろんなことが楽にできます
+    - クロスプラットフォーム
+    - 「プロジェクト」としてファイルを管理
+    - 様々なファイルを編集可能
+    - コード補完機能、データ読み込みなど
+    - 出力もラクラク etc...
+
+## RStudioのインストール
+- 安定版
+    1. 「RStudio」で検索
+    2. [RStudio.com](http://rstudio.com)へ移動
+    3. 該当するOSを選択してダウンロード→インストール
+- preview版
+    1. https://www.rstudio.com/products/rstudio/download/preview/ 
+    2. 該当するOSを選択してダウンロード→インストール
+
+特に設定は(現時点で)考えなくていいです。さっそく起動させましょう
+
+## RStudioの画面
+
+![rstudio画面](pics/rstudio_screen.png)
+
+## RStudioの各ペイン
+<div class="column1">
+- Source Editor
+    - スクリプトやファイルなどを編集する場所
+    - ソースコードを記述して保存・実行
+    - 多くの人が一番利用するところ
+</div>
+<div class="column2">
+![source editor](pics/rstudio_screen_1.png)
+</div>
+
+## RStudioの各ペイン
+<div class="column1">
+- **Console**
+    - Rと会話するところ
+    - コマンドを記述して実行
+    - ちょろっと作業するときはここ
+</div>
+<div class="column2">
+![console](pics/rstudio_screen_2.png)
+</div>
+
+## RStudioの各ペイン-右上
+<div class="column1">
+- **Environment, Historyなど**
+    - Environment
+        - 現在R上にあるオブジェクトなど
+        - データとかを確認可能
+    - History
+        - コンソールで実行したコマンドの履歴
+</div>
+<div class="column2">
+![env](pics/rstudio_screen_3.png)
+</div>
+
+## RStudioの各ペイン-右下
+<div class="column1">
+- **Files, Plot, Packages, Helpなど**
+    - Filesでディレクトリ(フォルダ)にアクセス可能
+    - Plotsに作図した図(グラフなど)が出力
+    - Packagesでパッケージの管理
+    - HelpでRのヘルプの検索・閲覧
+</div>
+<div class="column2">
+![files](pics/rstudio_screen_4.png)
+</div>
+
+## 詳細は省略...
+- RStudioは「Rを便利にするもの」
+    - それ以上でもそれ以下でもない
+    - Rが使えないと意味がない!!
+- まずはRStudioチートシート(英語)を一読しましょう
+    - [RStudio IDE Cheat Sheat](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf)
+
+# Rに触れてみよう
+
+## Hello, World
+
+**コンソールの使い方**
+
+以下が「コマンド?」状態:
+
+```
+>
+```
+
+試しに以下のコードをコンソールに入力してEnter
+```{r,eval=FALSE}
+1+1
+```
+
+ついでにこれもやってみよう
+```{r,eval=FALSE}
+41^2*271^2
+```
+
+## 関数を使おう
+
+2の平方根を算出するには?
+
+```{r}
+sqrt(2)
+```
+
+- 関数とは「inputに対して決まった命令を実行してoutput」
+- 上の場合、`2`という値を「その平方根を計算」して`r sqrt(2)`を出す
+    - この2を**引数(Arguments)**といいます
+    - そして出てきた結果が**出力(Value)**です
+- 関数は、**関数名(引数, 引数, 引数, ...)**という感じで書きます
+
+## オブジェクトを使おう
+
+Rは数値や文字などを**オブジェクト**という単位で管理
+```{r}
+# 今夜のbeerは500円です
+beer <- 500
+# beerの値段をRに聞いてみる
+beer
+```
+
+- この`beer`がオブジェクトです
+    - 変数に感覚が近いです
+    - いろんなものを入れて管理できます
+
+## オブジェクトに文字列を
+
+```{r}
+# 文字列を入れるときは""で挟む
+drink <- "beer"
+drink
+```
+
+```{r}
+# c()関数でまとめて入れることも可能
+drink <- c("beer", "sake", "shochu")
+drink
+```
+
+## オブジェクトに数値を
+
+```{r}
+# 数値もまとめて可能
+price <- c(500, 650, 450)
+price
+# こんなこともできます
+seki <- 1:10
+seki
+```
+
+## オブジェクトを操作
+
+```{r}
+# 2つ目の要素にアクセス
+price[2]
+# 平均価格を算出しましょう
+mean(price)
+# 税込価格を計算しましょう
+price * 1.08
+```
+
+
+## data.frameとは
+
+簡単に言えばスプレットシートみたいな形のデータ
+```{r}
+head(iris, 4)
+```
+- 列が変数、行が1サンプル
+- 列の長さは全て同じ(矩形)
+- 扱い方は別途説明
+
+
+# パッケージ
+
+## パッケージって何?
+- すごくざっくり言うと関数とかデータセットとかをまとめたもの
+    - ツールセットみたいなイメージ
+    - Rでできることを広げてくれます
+- 現在CRANに登録されているパッケージ数はこれで調べられます:
+```{r echo=TRUE, eval=FALSE}
+nrow(available.packages())
+```
+
+## パッケージのインストール
+例として`ggplot2`を使ってみます
+
+```{r eval=FALSE}
+install.packages("ggplot2")
+```
+
+- これでインストールできます
+- たまにエラーを返すことがあります
+    - 多くはパッケージの依存関係が原因です
+    - OSによって違ったり、そのマシンの環境によっても違ったり...
+    - 難しかったら身近な詳しい人や「Rなんでも相談室」で聞きましょう
+
+## 読み込みと実行
+散布図を描きます
+```{r fig.height=3}
+# パッケージをRで読み込む
+library("ggplot2")
+
+# この中のggplot()関数を利用
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, col=Species)) +
+  geom_point()
+```
+
+# Rをもっと使えるように
+
+## Webで資料を探す
+- [Rjpwiki](http://www.okada.jp.org/RWiki/)
+    - Rに関する日本のWiki。情報量膨大
+- [seekR](http://seekr.jp/)
+    - Rに特化した検索エンジン
+- [山口大学教育学部心理学選修](http://psycho.edu.yamaguchi-u.ac.jp/)
+    - [オンラインセミナー](http://psycho.edu.yamaguchi-u.ac.jp/?page_id=242)では動画でわかりやすく説明
+        - RStudioについてもあります
+    - [Rチュートリアルセミナーテキスト](http://psycho.edu.yamaguchi-u.ac.jp/?page_id=626)も公開
+- [RStudioチートシート集](https://www.rstudio.com/resources/cheatsheets/)
+    - [RStudio IDE](http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf)と[Base R](http://www.rstudio.com/wp-content/uploads/2016/05/base-r.pdf)はぜひ一度みてください。
+
+## おすすめの書籍
+<div class="column1">
+### [みんなのR](https://book.mynavi.jp/ec/products/detail/id=39763)
+- Rをさわりはじめた方に最適!!
+- 圧倒的...圧倒的ボリューム!!
+- RStudioや新しいパッケージなど**モダン**な使い方が学べます
+- これ1冊を写経できれば十分にOK
+</div>
+<div class="column2">
+![みんなのR](pics/minnaR.jpg)
+</div>
+
+----
+
+<div class="column1">
+### [改訂3版 R言語逆引きハンドブック](http://www.amazon.co.jp/dp/4863542011/)
+- 初心者から中級者まで
+- サンプルコード満載
+- 困ったらこれを開く。  
+  古事記にもそう書いてある
+</div>
+<div class="column2">
+![gyakubiki](pics/gyakubiki.jpg)
+</div>
+
+## 勉強会に出よう
+<div class="column1">
+**メリット**
+
+- 知識が増える
+- 刺激になる
+- **つおいひとと知り合える**
+- 仲間に出会える
+</div>
+
+<div class="column2">
+**デメリット**
+
+- 多くが不定期開催
+- 地方だと頻度が少ない
+- 内容が自分とあわないことも
+</div>
+
+## SNSやチャットを活用
+**Twitter**
+
+- Rユーザーをフォローしてみよう
+    - いろんな情報がガンガン垂れ流されてきます
+- うまくいかないことをTLに流してみよう
+    - 誰かがそっと教えてくれるかも?
+
+**r-wakalang**
+
+- "r-wakalang"もしくは"r-wakalang GitHub"で検索!
+    - すごい人たちが質問を待ってます
+    - 眺めているだけでも勉強になります
+
+---
+
+Enjoy!

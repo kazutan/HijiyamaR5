@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Kandair1 by kazutan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Kandair1</h1>
+      <h2 class="project-tagline">Kandai.R #1の資料置き場。</h2>
+      <a href="https://github.com/kazutan/KandaiR1" class="btn">View on GitHub</a>
+      <a href="https://github.com/kazutan/KandaiR1/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/kazutan/KandaiR1/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="kandair-1-発表資料" class="anchor" href="#kandair-1-%E7%99%BA%E8%A1%A8%E8%B3%87%E6%96%99" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Kandai.R #1 発表資料</h1>
+
+<p>ここは、Kandai.R #1 にて <a href="https://github.com/kazutan" class="user-mention">@kazutan</a> が発表した「Rでドキュメントを生成しよう」の資料置き場です。</p>
+
+<h2>
+<a id="rでドキュメントを生成しよう" class="anchor" href="#r%E3%81%A7%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%82%92%E7%94%9F%E6%88%90%E3%81%97%E3%82%88%E3%81%86" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rでドキュメントを生成しよう</h2>
+
+<p>いわゆるR Markdown入門です。スライドへのリンクは<a href="http://kazutan.github.io/KandaiR1/rmd_intro.html#/">こちら</a>です。</p>
+
+<p>基本的なことをさらっと紹介しています。一番最後の参考資料にあげているのを一読してもらえればと思います。以下解説と補足です。</p>
+
+<h3>
+<a id="markdown記法について" class="anchor" href="#markdown%E8%A8%98%E6%B3%95%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Markdown記法について</h3>
+
+<p><a href="http://kazutan.github.io/md_sample.md">サンプルのmdファイル</a>を(ちゃんと)作りました。htmlへのレンダリング結果は<a href="http://kazutan.github.io/md_sample.html">こちら</a>です。実際作業するならRStudioのメニューのHelpから"Markdown Quick Reference"を選択して、Helpビューに出てくるのを見るのが一番です。</p>
+
+<h3>
+<a id="対応する出力形式について" class="anchor" href="#%E5%AF%BE%E5%BF%9C%E3%81%99%E3%82%8B%E5%87%BA%E5%8A%9B%E5%BD%A2%E5%BC%8F%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>対応する出力形式について</h3>
+
+<p>繰り返しますが、<strong>Rmdの出力はhtmlが最強</strong>です。それ以外はメリットが半減します。またhtmlと言ってもいろいろありますし、他のパッケージでいろんなものが使えます。そのあたりについてはぼちぼちどっかでまとめるかプレゼンします。</p>
+
+<h3>
+<a id="rチャンクについて" class="anchor" href="#r%E3%83%81%E3%83%A3%E3%83%B3%E3%82%AF%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rチャンクについて</h3>
+
+<p>チャンクを挿入するには"Ctrl+Alt+I"が便利です。もしくは緑のCのボタンがありますので、これでもいいかと</p>
+
+<p>あと、最近のRStudioなら、チャンク部分の一行目に歯車ボタンがあり、ここから基本的な設定が可能です:</p>
+
+<p><img src="pics/chunkoption.png" alt="chunkoption"></p>
+
+<p>よくわからなかったら、これで設定してしまってもOKです。使っていくと段々「こういうのできないのかなぁ」と思う場面が出てくるはずですので、その時に調べて学んでいければいいと思います。</p>
+
+<h3>
+<a id="yamlヘッダ" class="anchor" href="#yaml%E3%83%98%E3%83%83%E3%83%80" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>yamlヘッダ</h3>
+
+<p>「やむる」と読むそうです。Rmdを新規で作成した時にファイル先頭に出てくる、以下のような部分です:</p>
+
+<pre><code>---
+title: "Untitled"
+author: "kazutan"
+date: "2016/6/20"
+output: html_document
+---
+</code></pre>
+
+<p>スライドで説明したとおりですが、YAML記法でいろんなことが設定できますし、Pandocに慣れている方はここで直接Pandocにオプションを渡せます。詳しくは本家のドキュメントを参照してください。</p>
+
+<h3>
+<a id="citationの使い方" class="anchor" href="#citation%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Citationの使い方</h3>
+
+<p>この発表のメインその1です。</p>
+
+<p>かつてはできなかったのですが、Pandocを採用してからはこの機能が実装されました。おそらく研究者にとってはこの機能は必須なものとなるはずですが、国内記事ではほとんど見かけません。なんででしょう…。</p>
+
+<p>詳しくは<a href="http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html">本家の解説ドキュメント</a>をご覧ください。文献管理をMendeleyなどで管理している方は、この機能の凄さを体感できるかと思います。要するにExportして、それをRmdの冒頭YAMLに追加すればOKです。あとは自動的に並べてくれます。対応形式も豊富ですし、論文などを執筆するならベースはRmdでやればいいはずです。</p>
+
+<p>なお、発表の時に使用していた<code>APA.csl</code>は<a href="http://my.ilstu.edu/%7Ewjschne/442/Introduction_to_RMarkdown.html">こちら</a>からDLしました。なお、パッケージとして{papaja}というのが提供されているのですが、私の手元で検証した結果、紹介を見送りました。国際誌なら全く問題ないですが、日本語を含む場合微妙でしたので…。</p>
+
+<h3>
+<a id="テンプレートの活用" class="anchor" href="#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E6%B4%BB%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>テンプレートの活用</h3>
+
+<p>この発表のメインその2です。</p>
+
+<p>企画者からの指令があったので頑張りました…が、正直完璧に仕上げるのは無理でした。なおデモで使用したdocxファイルは<a href="https://dl.dropboxusercontent.com/u/62654521/set_APAlike.docx">こちら(Dropbox)</a>においてます。Githubだとバイナリファイルがなんか崩れるっぽいので…。</p>
+
+<p>テンプレートの当て方などについては本家ドキュメントを参照してください。</p>
+
+<h2>
+<a id="質問など" class="anchor" href="#%E8%B3%AA%E5%95%8F%E3%81%AA%E3%81%A9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>質問など</h2>
+
+<p>この内容について質問などありましたら、このリポジトリのissueもしくはTwitterの<a href="https://github.com/kazutan" class="user-mention">@kazutan</a>までおねがいします。</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/kazutan/KandaiR1">Kandair1</a> is maintained by <a href="https://github.com/kazutan">kazutan</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
