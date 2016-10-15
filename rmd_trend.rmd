@@ -1,0 +1,563 @@
+---
+title: "最近のR Markdown関連のお話"
+subtitle: "Hijiyama.R #5"
+author: "前田和寛(@kazutan)"
+date: "`r format(Sys.time(),'%Y/%m/%d')`"
+output:
+  revealjs::revealjs_presentation:
+    theme: "sky"
+    center: true
+    pandoc_args: [
+      '--from', 'markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures'
+    ]
+    css: for-revealjs.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# はじめに
+
+## 今回の内容
+
+- R Markdownの最新の機能
+- R notebook
+- flexdashboardとその活用例
+- pkgdownパッケージ
+- その他テンプレート
+
+## 注意事項
+
+以下の事項を前提としています:
+
+- RStudio Preview版(ver1.0.39で動作確認)
+- rmarkdown最新版(ver1.1以降)
+- その他紹介するパッケージはCRAN最新版，あるいはGithub版
+
+## session info
+
+```{r}
+devtools::session_info()$platform
+```
+
+---
+
+```{r}
+devtools::session_info()$packages
+```
+
+# R Markdownの最新機能
+
+## GUIまわりが進化
+- 初期の頃と比較するとかなり充実
+    - ざっくりと把握したいならR Markdownのチートシート参照
+    
+    ![](pics/Rmd_cheatsheet_gui.png)
+
+## 数式がインラインで表示
+- 数式が**いちいちレンダリングせずに結果が表示**されるように
+    - インラインでもOK
+    
+    ![](pics/Rmd_eql.png)
+
+## 画像をインラインで表示
+- mdで画像を差し込むと自動的に表示
+    - いちいち表示されるかどうかレンダリングしなくてすむ
+    
+    ![](pics/Rmd_inline_pics.png)
+
+
+## パラメータ機能に対応
+- yaml部分に以下のように記述
+```
+params:
+  hoge: 100
+  fuga: "kosaki"
+```
+- 設定した値は`params$(パラメータ名)`という**読み込み専用list**に格納
+    - 同一ドキュメント内で自由に使用可能
+    - `render("aaa.Rmd", params=list(hoge=15, fuga="good"))`と渡すことも可能
+- 詳細は[本家サイトの解説](http://rmarkdown.rstudio.com/developer_parameterized_reports.html)を参照
+
+## 多言語に対応
+- R言語以外でも,チャンクで処理することが可能
+    - Python
+    - SQL
+    - Bash
+    - Rcpp
+    - Stan etc...
+- 以下のように記述
+````
+`r ''````{bash}
+cat flights1.csv flights2.csv flights3.csv > flights.csv
+`r ''````
+````
+
+---
+
+こんなことも可能です
+
+````
+`r ''````{stan, output.var="ex1"}
+parameters {
+  real y[2]; 
+} 
+model {
+  y[1] ~ normal(0, 1);
+  y[2] ~ double_exponential(0, 2);
+}
+`r ''````
+````
+
+````
+`r ''````{r}
+library(rstan)
+fit <- sampling(ex1) 
+print(fit)
+`r ''````
+````
+
+---
+
+### 注意点
+- それぞれの実行環境が必要
+    - PythonだったりSQLとか
+    - またそれぞれでうまく行かない場合もあり
+- 以下のドキュメントを一読してからお試しを
+    - [knitr Language Engines](http://rmarkdown.rstudio.com/authoring_knitr_engines.html)
+    - [Language engines: Use other languages in knitr](http://yihui.name/knitr/demo/engines/)
+
+# R Notebook {#rnb}
+
+## R Notebookとは
+
+- R Markdownのoutputのひとつ
+    - 2016年夏にRStudioのPreview版に実装
+    - 公式ドキュメントは以下のリンク:  
+    http://rmarkdown.rstudio.com/r_notebooks.html
+- **Rmd編集ウィンドウで出力が表示可能**
+- **`.nb.html`**という形式で出力
+
+---
+
+こんな感じです:
+
+![R Notebook](pics/Rnotebook.png)
+
+## 使ってみよう {#howtoRnb}
+
+<div class="column1">
+1. RStudioのPreview版を準備
+2. {rmarkdown}の最新版を入れる
+3. "File - R Notebook"を選択
+4. Rmdを編集し、チャンクのコードを実行
+</div>
+<div class="column2">
+![](pics/new_Rnb.png)
+</div>
+
+## 基本はRmd
+
+- 中身の作り方はRmdと同一
+    - 基本`html_document`で考えてください
+    - 冒頭のyamlで設定できる項目については、`?rmarkdown::html_notebook`を参照
+- 注意点は後述
+
+## 出力は`.nb.html`形式
+
+- R Notebook HTML Formatという形式とのこと
+- 一見はいつものRmd出力のhtmlと同一だけど…
+    - 内部はかなり違う
+    - 詳しくは以下のドキュメント参照  
+    http://rmarkdown.rstudio.com/r_notebook_format.html
+    - この中に**Rmdの内容が組み込まれている**
+
+## 特色
+
+- チャンクコードを実行すると、Consoleに送られる
+    - その内容を現在の環境で実行して、チャンクの下に出してくる感じ
+- もちろんPlotsも同じ
+    - 編集ウィンドウに出てくるときは、自動的に黄金比で出てくる
+    - ウィンドウの横幅が変化すると、そのたびに再度(実行してるの全て)出力してくる
+
+## R Notebook Tips 1
+
+### ショートカットキー
+
+- Ctrl(Cmd) + Shift + Enter
+    - 今いるチャンク内のコードを実行
+    - 多分これは必須ショートカット
+- Ctrl(Cmd) + Alt + I
+    - Rチャンクを挿入
+    - 事前に選択してショートカットすると、そこが独立してRチャンクに
+- Ctrl(Cmd) + Shift + K
+    - Preview(Knit)を実行
+    - ドキュメント内のチャンクはすべて再度実行される
+
+## R Notebook Tips 2
+
+### 出力の全消去・折りたたみ・展開
+
+- 出力の全消去
+    1. 編集ウィンドウの上にある歯車ボタンをクリック
+    2. "Clear All Output"でクリア
+- 出力の全折りたたみ
+    1. 編集ウィンドウの上にある歯車ボタンをクリック
+    2. "Collapse All Output"で全部折りたたみ
+- 出力の全展開
+    1. 編集ウィンドウの上にある歯車ボタン
+    2. "Expand All Output"で全部展開
+
+## R Notebook Tips 3
+
+### Rmdファイルの復元
+
+- `.nb.html`ファイルには`.Rmd`が組み込まれている
+- もしRmdファイルがなくても復元可能
+    1. ファイルウィンドウで`.nb.html`をクリック
+    2. "Open in Editor"を選択
+    3. **該当RmdがなくてもRmdファイルが作成され開く!!**
+    
+## 注意点 {#notice-fdb}
+
+### `self_contained: FALSE`はNG
+
+- いろいろ試したのですが、うまくいきません
+    - helpには「やらんでね」と名言はなかったけどそういう趣旨の文言があった
+    - というより、この機能の趣旨にあいません
+
+---
+
+### "Rmd Download"の罠
+
+- `.nb.html`で出したドキュメントの右側に"Code"というボタンが
+    - 全コードの表示・非表示を選択可能
+    - この中に**Download Rmd**をクリックするとDLできる
+- 日本語がうまくいかない
+    - これできたら最高なので、誰か助けてください
+
+---
+
+### 中途半端な実行
+
+- "Ctrl + Enter"で一行ごとで実行可能
+- でも、中途飯場に実行してると想定外のことになるかも
+    - Rチャンクの右上に"Run All Chunks Above"というボタンを!
+
+## 結局、使いどころは?
+
+- メモを取りながら作業するとき
+    - まだカチッとしたドキュメントを作る段階じゃない、でもある程度は…
+    - outputを他のに切り替えれば、すぐに他の形式に出せるしね
+- Rmdをtear(別ウインドウで切り離す)して単体で作業
+    - 画面半分くらいで十分なので、の垢離半分は別の作業できる
+- Rmdファイルもセットで配布させたい時
+    - .nb.htmlのファイルさえあれば復元可能なので
+
+## 参考資料 {#fdb-rnb}
+
+- [RStudio Preview](https://www.rstudio.com/products/rstudio/download/preview/)
+- [R Markdown Notebooks](http://rmarkdown.rstudio.com/r_notebooks.html)
+- [R Notebook HTML Format](http://rmarkdown.rstudio.com/r_notebook_format.html)
+- [Introducing Notebooks with R Markdown &#8211; RStudio](https://www.rstudio.com/resources/webinars/introducing-notebooks-with-r-markdown/)
+- [上の動画の資料](https://github.com/rstudio/webinars/tree/master/25-Notebooks)
+
+
+# flexdashboardパッケージ
+
+## ダッシュボードとは?
+
+- 色々な情報をぱっと見で理解できるように集約したもの
+    - 車の運転席のダッシュボードをイメージしてもらえれば
+    - グラフや表，文字などをわかりやすく配置
+- データを集約して表示するのに便利
+    - あるトピックについて，様々な角度から可視化
+    - 相手に情報を伝えやすい!
+
+## flexdashboardパッケージ
+
+- R Markdownの拡張パッケージ
+    - **Rmdファイル単体で**ダッシュボードを作成可能
+- レイアウトが簡単
+    - row(行)とcolumn(列)によるレイアウトシステム
+    - モバイル対応(フレキシブルデザイン)
+- レイアウト設定以外は通常のRmd
+    - 動的なコンテンツ(htmlwidgets系)も作成可能
+    - shinyもOK
+
+## 使ってみよう {#howtoFdb}
+
+- CRANから
+```{r, eval=FALSE}
+install.packages("flexdashboard")
+```
+- GitHub版から
+```{r, eval=FALSE}
+devtools::install_github("rstudio/flexdashboard")
+```
+
+---
+
+<div class="column1">
+- R Markdownを新規作成
+- "From Template"を選択
+- "Flex Dashboard"を選択
+- OKをクリック
+</div>
+<div class="column2">
+![](pics/fdb_create.png)
+
+---
+
+こんなRmdができます:
+
+![](pics/fdb_default.png)
+
+---
+
+そのままknitするとこうなります:
+
+![](pics/fdb_defalut_knit.png)
+
+## 冒頭のyamlについて
+
+```
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+```
+
+- title: ページのタイトル(navbarにあるやつ)
+- orientation: **列方向(columns)**で区切るか**行方向(rows)**で区切るか
+    - **見出し要素Lv2**の方向を決定します
+- vertical_layout: グラフを範囲内に収める("fill")かスクロール("scroll")するか
+- social: 要するに"共有"ボタンをつけるかどうか
+
+他にもありますが，`?flexdashboard::flex_dashboard`でヘルプを参照してください
+
+## レイアウトと見出しレベルについて
+
+### 見出しレベル1: ページ区切り
+
+- 見出しレベル1(h1)があると，ページ区切りとして機能
+    - 公式やサンプルでは`====`を使った方法で解説
+    ```
+    ページタイトル
+    ====
+    ```
+    - でもいつもの`#`でもOK
+    ```
+    # ページタイトル
+    ```
+- この文字は**表示されません**
+    - 識別用に利用されます
+
+---
+
+### 見出しレベル2: 親ブロックの区切り
+
+- 見出しレベル2(h2)があると，その数だけページ内を区切ります
+    - 公式やサンプルでは`----`を使った方法で解説
+    ```
+    ブロック
+    ----
+    ```
+    - でもいつもの`##`でもOK
+    ```
+    ## ブロック
+    ```
+- この文字は**表示されません**
+    - 識別用に利用されます
+
+---
+
+### 見出しレベル3: 親ブロック内の子ブロック
+
+- 見出しレベル3(h3)があると，その親ブロック内で子ブロックを作成します
+    - いつも通り`###`で作ります
+    ```
+    ### ちゃーと
+    ```
+    - この中にRチャンクを挿入して中身を作成
+    - 親ブロック内に子ブロックが複数あると**親と逆の方向で区切ります**
+- この文字は**表示されます**
+
+## タブセットの利用
+
+- 親ブロック(見出しレベル2)内でタブを設定可能
+    - 子ブロック要素が各タブの内容となります
+    
+    ```
+    ## 親ブロック {.tabset}
+    
+    ### 子ブロック1
+    (ここにRチャンクなど)
+
+    ### 子ブロック2
+    (ここにRチャンクなど)
+    ```
+
+## その他のレイアウト関連
+
+- 他にも色んなパターンができます
+    - 区切り幅(高さ)の調整
+    - サイドバーを表示
+    - ストーリボード
+- 詳しくは，以下の本家のサイトを参照してください
+    - [Sample flexdashboard Layouts](http://rmarkdown.rstudio.com/flexdashboard/layouts.html)
+
+## Components
+
+- [ValueBoxes](http://rmarkdown.rstudio.com/flexdashboard/using.html#value_boxes): 単一の値をシンプルに示したい時に
+    ![](pics/fdb_vbox.png)
+- [gauge](http://rmarkdown.rstudio.com/flexdashboard/using.html#gauges): ゲージをさっくりと作ることも可能
+    ![](pics/fdb_gauge.png)
+- 詳細およびその他の要素は本家のサイトを参照
+    - [Using flexdashboard#components](http://rmarkdown.rstudio.com/flexdashboard/using.html#components)
+
+## 活用例: グルメマップ
+- 学会に参加**できなかった**から作りました
+    - 実際のダッシュボードは[こちら](http://kz-md.net/stat/tmp_box/sp2016_map_dashboard.html)
+    - Rmdのコードは[こちら](http://kz-md.net/stat/tmp_box/sp2016_map_dashboard.Rmd) (データはありません)
+    ![](pics/fdb_sample_jssp.png)
+
+## 活用例: 台風プロット
+- 気付いたら作るようになってた
+    - 実際のダッシュボードは[こちら](http://kz-md.net/stat/tmp_box/2016typhoon2.html)
+    - Rmdのコードは[こちら](http://kz-md.net/stat/tmp_box/2016typhoon2.Rmd) (データはありません)
+    ![](pics/fdb_sample_typhoon.png)
+
+## 活用例: 個人別ダッシュボード
+
+<div class="column1">
+- 「あるデータセットから，個人別のダッシュボードをまとめて作りたい」
+    - R Markdownのパラメータ機能をうまく利用すれば可能
+    - 詳細は以下を参照  
+    [R Markdownのparams機能を利用してflexdashboard作成](https://github.com/kazutan/param_dashboard)
+</div>
+<div class="column2">
+![](pics/fdb_sample_kosaki.png)
+</div>
+
+## 参考資料 {#ref-fdb}
+
+- [flexdashboard: Easy interactive dashboards for R](http://rmarkdown.rstudio.com/flexdashboard/)
+    - 本家のWebサイト
+    - たぶんまともな情報はここくらいにしかない
+    - あとはソースコードとヘルプを読むくらいしか…
+- [flexdashboard Examples](http://rmarkdown.rstudio.com/flexdashboard/examples.html)
+    - サンプルがギャラリーになってます
+    - ソースコードも(いくつかは)確認できます
+        - 各ギャラリーをクリックして表示
+        - 画面右上の"</>Source Code"をクリック
+    - Pokemonすげぇ
+
+# pkgdownパッケージ
+
+## パッケージ用のWebサイト作り
+
+- パッケージを作成して公開したとして…
+    - Helpとかドキュメントは整備した
+    - できればWebサイトとか準備したい
+    - でも**超めんどくさい**
+    - 自動的に作ってくれないの?
+- pkgdownパッケージを使ってみよう
+
+## pkgdownパッケージとは
+
+- R Markdownをベースにした，パッケージ用Webサイト作成に特化したもの
+    - パッケージのリポジトリ(R Project)から**自動的に**Webサイトに必要なファイルを作成
+    - bootstrap3ベースデザイン
+    - Webサイト構成についても柔軟にカスタマイズ可能
+        - R MarkdownでWebサイトをbuildするのに近い
+        - たぶん同じ要領
+- 詳細は以下の本家サイトを参照
+    - http://hadley.github.io/pkgdown/
+
+---
+
+こんな感じです:
+
+<div class="column1">
+![](pics/pkgdown_demo_1.png)
+</div>
+<div class="column2">
+![](pics/pkgdown_demo_2.png)
+</div>
+
+## pkgdownの仕組み
+デフォルトでは以下のような感じです:
+
+- 生成物は`./docs`に格納される
+    - `README.md`から`index.html`を生成
+    - `./man`から`reference`を作成
+        - `.Rd`から各関数のページを作成
+        - Function referenceの一覧ページも
+    - `./vignette`から`Article`を生成
+        - `.Rmd`から各ドキュメントを作成
+        - もちろん一覧ページも
+    - 生成されたものに合わせてnavbarを生成
+        - `_site.yaml`で詳細設定も可能
+
+## インストールと実行
+
+### インストール
+
+GitHubから。
+
+```{r eval=FALSE}
+devtools::install_github("hadley/pkgdown")
+```
+
+### 実行
+
+以下のコマンドを実行するだけでOK
+
+```{r eval=FALSE}
+pkgdown::build_site()
+```
+
+たったこれだけ!
+
+## 注意点 {#notice-pkgdown}
+
+- {devtools}での開発を念頭においてるっぽい
+    - だって開発者は…
+- 元のドキュメントがないとスッカスカ
+    - 逆に言うとヘルプドキュメント部分をちゃんと記述すれば超楽になる
+    - 特にvignetteの恩恵が大きい
+        - vignette用のRmdには，`output: rmarkdown::html_vignette`がおすすめ
+        - R Markdownのテンプレートに標準ではいってます
+
+## 参考資料 {#ref-pkgdown}
+
+- [Home. pkgdown](http://hadley.github.io/pkgdown/)
+    - 本家のWebサイト。もちろんpkgdownでbuildしてます
+- [Hadley/pkgdown](https://github.com/hadley/pkgdown)
+    - 本家のGithubリポジトリ。
+- [hoxo-m/githubinstall](https://hoxo-m.github.io/githubinstall)
+    - githubinstallのWebサイト。pkgdownで作成しています  
+    (もしかしたら今すぐは404かも)
+
+# さいごに
+
+## 紹介を見送った内容
+
+- bookdownパッケージ
+    - R Markdownで本を作るパッケージ
+        - [GitHub](https://github.com/rstudio/bookdown), [本家サイト](https://bookdown.org/)
+        - 図表の通し番号もちゃんとやってくれる
+        - Webサイト，pdf，**epub**に対応
+        - いつかこれで薄い本作ろう…
+- rmdshowerパッケージ
+    - Rmdスライドを作成するパッケージ
+        - [GitHub](https://github.com/MangoTheCat/rmdshower)
+        - テストしてみた([code](https://gist.github.com/kazutan/d27b2330860ce2e71ee8e03bf2f7af9d)/[完成例](http://kz-md.net/stat/tmp_box/rmdshower_test.html))
+        - おもしろいけど，色々面倒な点があった
+
+## Enjoy!
+
+- https://github.com/kazutan/HijiyamaR5
